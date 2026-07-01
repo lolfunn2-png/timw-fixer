@@ -1,22 +1,18 @@
-import com.google.gms.googleservices.GoogleServicesPlugin.MissingGoogleServicesStrategy
-
 plugins {
   alias(libs.plugins.android.application)
   // alias(libs.plugins.kotlin.compose)
-  alias(libs.plugins.google.devtools.ksp)
   alias(libs.plugins.roborazzi)
   alias(libs.plugins.secrets)
-  alias(libs.plugins.google.services)
 }
 
 android {
   namespace = "com.example"
-  compileSdk { version = release(36) { minorApiLevel = 1 } }
+  compileSdk = 28
 
   defaultConfig {
     applicationId = "com.example"
     minSdk = 19
-    targetSdk = 36
+    targetSdk = 19
     versionCode = 1
     versionName = "1.0"
 
@@ -51,8 +47,8 @@ android {
     }
   }
   compileOptions {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
   }
   buildFeatures {
     compose = false
@@ -66,10 +62,6 @@ android {
 secrets {
   propertiesFileName = ".env"
   defaultPropertiesFileName = ".env.example"
-}
-
-googleServices {
-  missingGoogleServicesStrategy = MissingGoogleServicesStrategy.WARN
 }
 
 
@@ -96,6 +88,7 @@ dependencies {
   // implementation(libs.androidx.datastore.preferences)
   // implementation(libs.androidx.lifecycle.runtime.compose)
   implementation(libs.androidx.lifecycle.runtime.ktx)
+  implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0")
   // implementation(libs.androidx.lifecycle.viewmodel.compose)
   // implementation(libs.androidx.navigation.compose)
   implementation(libs.androidx.room.ktx)
@@ -127,6 +120,12 @@ dependencies {
   androidTestImplementation(libs.androidx.runner)
   // debugImplementation(libs.androidx.compose.ui.test.manifest)
   // debugImplementation(libs.androidx.compose.ui.tooling)
-  "ksp"(libs.androidx.room.compiler)
-  // "ksp"(libs.moshi.kotlin.codegen)
+  annotationProcessor(libs.androidx.room.compiler)
 }
+
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+  compilerOptions {
+    jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_1_8)
+  }
+}
+
